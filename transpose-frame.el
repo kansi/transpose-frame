@@ -132,10 +132,17 @@
 ;;; Code:
 
 ;; Internal functions
+(defun transpose-frame-tree-exclude-neotree (frame)
+  (if (string-equal " *NeoTree*" (buffer-name (window-buffer (car (cddr frame)))))
+      (cadr (cddr frame))
+    frame
+    )
+  )
 
 (defun transpose-frame-get-arrangement (&optional frame subtree)
   (let ((tree (or subtree
-                  (car (window-tree frame)))))
+                  (transpose-frame-tree-exclude-neotree (car (window-tree frame)))
+                  )))
     (if (windowp tree)
         (list (window-buffer tree)
               (window-start tree)
